@@ -29,8 +29,8 @@ print(evaluate_policy(oracle, Monitor(env))[0])
 clf = DecisionTreeRegressor(
     max_leaf_nodes=32
 )  # Change to DecisionTreeClassifier for discrete Actions.
-tree_policy = DTPolicy(clf, env)  #
-# You can replace by ObliqueDTPolicy(clf, env) for more performing but less interpretable.
+tree_policy = ObliqueDTPolicy(clf, env)  #
+# You can replace by DTPolicy(clf, env) for interpretable axis-parallel DTs.
 
 # Start the imitation learning
 interpret = Interpreter(oracle, tree_policy, env)
