@@ -25,8 +25,9 @@ setup(
     author="Hector Kohler",
     author_email="hector.kohler@inria.fr",
     install_requires=["scikit-learn>=1.3.0",
-                      "stable-baselines3>=2.0",
+                      "stable-baselines3",
                         "gymnasium[mujoco]",
                         "huggingface-sb3",
-                        "tqdm"],
+                        "tqdm",
+                        "Shimmy==1.3.0",],
 )
