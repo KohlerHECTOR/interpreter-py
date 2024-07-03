@@ -14,8 +14,7 @@ from pickle import dump, load
 
 # Download a policy from the stable-baselines3 zoo
 checkpoint = load_from_hub(
-	repo_id="sb3/sac-HalfCheetah-v3",
-	filename="sac-HalfCheetah-v3.zip"
+    repo_id="sb3/sac-HalfCheetah-v3", filename="sac-HalfCheetah-v3.zip"
 )
 
 # Load the oracle policy
@@ -27,8 +26,10 @@ oracle = SB3Policy(model.policy)
 print(evaluate_policy(oracle, Monitor(env))[0])
 
 # Instantiate the decision tree class (here a regression tree with at most 16 leaves)
-clf = DecisionTreeRegressor(max_leaf_nodes=32) # Change to DecisionTreeClassifier for discrete Actions.
-tree_policy = DTPolicy(clf, env) # 
+clf = DecisionTreeRegressor(
+    max_leaf_nodes=32
+)  # Change to DecisionTreeClassifier for discrete Actions.
+tree_policy = DTPolicy(clf, env)  #
 # You can replace by ObliqueDTPolicy(clf, env) for more performing but less interpretable.
 
 # Start the imitation learning
@@ -46,4 +47,8 @@ with open("tree_halfcheetah.pkl", "wb") as f:
 with open("tree_halfcheetah.pkl", "rb") as f:
     clf = load(f)
 # Render
-evaluate_policy(DTPolicy(clf, env), env=Monitor(gym.make("HalfCheetah-v4", render_mode="human")), render=True)
+evaluate_policy(
+    DTPolicy(clf, env),
+    env=Monitor(gym.make("HalfCheetah-v4", render_mode="human")),
+    render=True,
+)
