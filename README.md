@@ -71,7 +71,7 @@ with open("tree_halfcheetah.pkl", "rb") as f:
     clf = load(f)
 # Render
 evaluate_policy(
-    DTPolicy(clf, env),
+    ObliqueDTPolicy(clf, env),
     env=Monitor(gym.make("HalfCheetah-v4", render_mode="human")),
     render=True,
 )
