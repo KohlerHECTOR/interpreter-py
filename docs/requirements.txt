@@ -1,0 +1,5 @@
+pydata-sphinx-theme
+myst-parser
+nbsphinx
+sphinx-copybutton
+numpydoc
