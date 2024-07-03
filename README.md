@@ -17,7 +17,7 @@ In the provided ```ObliqueDTPolicy``` class, the method get_oblique_data generat
 
 # Usage
 ```bash
-pip install -r requirements.txt
+pip install git+https://github.com/KohlerHECTOR/interpreter-py
 ```
 
 ```python
@@ -70,4 +70,17 @@ with open("tree_halfcheetah.pkl", "rb") as f:
     clf = load(f)
 # Render
 evaluate_policy(DTPolicy(clf, env), env=Monitor(gym.make("HalfCheetah-v4", render_mode="human")), render=True)
+```
+
+# Cite
+```bibtex
+@misc{kohler2024interpretableeditableprogrammatictree,
+      title={Interpretable and Editable Programmatic Tree Policies for Reinforcement Learning}, 
+      author={Hector Kohler and Quentin Delfosse and Riad Akrour and Kristian Kersting and Philippe Preux},
+      year={2024},
+      eprint={2405.14956},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2405.14956}, 
+}
 ```
