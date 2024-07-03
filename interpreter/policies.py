@@ -106,6 +106,26 @@ class SB3Policy(Policy):
 
 
 class DTPolicy(Policy):
+    """
+    Decision Tree Policy class.
+
+    Parameters
+    ----------
+    clf : sklearn.base.BaseEstimator
+        The decision tree classifier or regressor.
+    env : gym.Env
+        The environment in which the policy operates.
+
+    Attributes
+    ----------
+    clf : sklearn.base.BaseEstimator
+        The decision tree classifier or regressor.
+    observation_space : gym.Space
+        The observation space of the environment.
+    action_space : gym.Space
+        The action space of the environment.
+    """
+
     def __init__(self, clf, env):
         assert isinstance(env.observation_space, gym.spaces.Box)
         if isinstance(env.action_space, gym.spaces.Box):
@@ -114,13 +134,34 @@ class DTPolicy(Policy):
             assert isinstance(clf, DecisionTreeClassifier)
         super().__init__(env.observation_space, env.action_space)
         self.clf = clf
-        # Policy init
+        # Policy initialization with random samples
         self.clf.fit(
             [self.observation_space.sample() for _ in range(1000)],
             [self.action_space.sample() for _ in range(1000)],
         )
 
     def predict(self, obs, state=None, deterministic=True, episode_start=0):
+        """
+        Predict the action to take given an observation.
+
+        Parameters
+        ----------
+        obs : np.ndarray
+            The observation input.
+        state : object, optional
+            The state of the policy (default is None).
+        deterministic : bool, optional
+            Whether to use a deterministic policy (default is True).
+        episode_start : int, optional
+            The episode start index (default is 0).
+
+        Returns
+        -------
+        action : np.ndarray
+            The action to take.
+        state : object
+            The updated state of the policy.
+        """
         if not is_vectorized_box_observation(obs, self.observation_space):
             if isinstance(self.action_space, gym.spaces.Discrete):
                 action = self.clf.predict(obs.reshape(1, -1)).squeeze().astype(int)
@@ -140,10 +181,40 @@ class DTPolicy(Policy):
                     return self.clf.predict(obs)[:, np.newaxis], None
 
     def fit_tree(self, S, A):
+        """
+        Fit the decision tree with the provided observations and actions.
+
+        Parameters
+        ----------
+        S : np.ndarray
+            The observations.
+        A : np.ndarray
+            The actions.
+        """
         self.clf.fit(S, A)
 
 
 class ObliqueDTPolicy(Policy):
+    """
+    Oblique Decision Tree Policy class.
+
+    Parameters
+    ----------
+    clf : sklearn.base.BaseEstimator
+        The decision tree classifier or regressor.
+    env : gym.Env
+        The environment in which the policy operates.
+
+    Attributes
+    ----------
+    clf : sklearn.base.BaseEstimator
+        The decision tree classifier or regressor.
+    observation_space : gym.Space
+        The observation space of the environment.
+    action_space : gym.Space
+        The action space of the environment.
+    """
+
     def __init__(self, clf, env):
         if isinstance(env.action_space, gym.spaces.Box):
             assert isinstance(clf, DecisionTreeRegressor)
@@ -151,7 +222,7 @@ class ObliqueDTPolicy(Policy):
             assert isinstance(clf, DecisionTreeClassifier)
         super().__init__(env.observation_space, env.action_space)
         self.clf = clf
-        # Policy init
+        # Policy initialization with clipped random samples
         init_S = np.array([self.observation_space.sample() for _ in range(1000)]).clip(
             -2, 2
         )
@@ -161,6 +232,19 @@ class ObliqueDTPolicy(Policy):
         )
 
     def get_oblique_data(self, S):
+        """
+        Generate oblique data by creating pairwise differences between observations.
+
+        Parameters
+        ----------
+        S : np.ndarray
+            The input observations.
+
+        Returns
+        -------
+        final : np.ndarray
+            The original observations stacked with pairwise differences.
+        """
         # Generate indices for the lower triangular part of the matrix
         indices = np.tril_indices(self.observation_space.shape[0], k=-1)
         # Tile the rows to create matrices for subtraction
@@ -176,6 +260,27 @@ class ObliqueDTPolicy(Policy):
         return final
 
     def predict(self, obs, state=None, deterministic=True, episode_start=0):
+        """
+        Predict the action to take given an observation.
+
+        Parameters
+        ----------
+        obs : np.ndarray
+            The observation input.
+        state : object, optional
+            The state of the policy (default is None).
+        deterministic : bool, optional
+            Whether to use a deterministic policy (default is True).
+        episode_start : int, optional
+            The episode start index (default is 0).
+
+        Returns
+        -------
+        action : np.ndarray
+            The action to take.
+        state : object
+            The updated state of the policy.
+        """
         if not is_vectorized_box_observation(obs, self.observation_space):
             s_mat = np.tile(obs, (self.observation_space.shape[0], 1))
             diff_s = s_mat - s_mat.T
@@ -203,4 +308,14 @@ class ObliqueDTPolicy(Policy):
                     )
 
     def fit_tree(self, S, A):
+        """
+        Fit the decision tree with the provided oblique observations and actions.
+
+        Parameters
+        ----------
+        S : np.ndarray
+            The observations.
+        A : np.ndarray
+            The actions.
+        """
         self.clf.fit(self.get_oblique_data(S), A)
