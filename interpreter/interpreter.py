@@ -79,7 +79,7 @@ class Interpreter:
             print("Fitting tree nb {} ...".format(t + 1))
             S_new, A_new = self.tree_policy.generate_data(self.env, self.data_per_iter)
             S = np.concatenate((S, S_new))
-            A = np.concatenate((A, A_new))
+            A = np.concatenate((A, self.oracle.predict(S_new)[0]))
 
             self.tree_policy.fit_tree(S, A)
             tree_reward, _ = evaluate_policy(self.tree_policy, self.env)

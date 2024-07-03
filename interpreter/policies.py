@@ -77,7 +77,7 @@ class Policy(ABC):
         )
         if isinstance(env.action_space, gym.spaces.Discrete):
             assert env.action_space.n == self.action_space.n
-            A = np.zeros((nb_data, 1))
+            A = np.zeros((nb_data))
         elif isinstance(env.action_space, gym.spaces.Box):
             assert env.action_space.shape == self.action_space.shape
             A = np.zeros((nb_data, self.action_space.shape[0]))

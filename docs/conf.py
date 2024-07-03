@@ -9,7 +9,7 @@
 project = "interpreter"
 copyright = "2024, Hector Kohler"
 author = "Hector Kohler"
-release = "0.1.1"
+release = "0.1.2"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
