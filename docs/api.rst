@@ -14,7 +14,7 @@ Main class
   :template: class.rst
 
     interpreter.Interpreter
-    interpreter.ObliqueDTPolicy
+    interpreter.policies.ObliqueDTPolicy
 
 Main functions
 ==============
@@ -23,7 +23,7 @@ Main functions
   :toctree: generated/
   :template: function.rst
 
-    interpreter.Interpreter.train
-    interpreter.ObliqueDTPolicy.get_oblique_data
+    interpreter.interpreter.Interpreter.train
+    interpreter.policies.ObliqueDTPolicy.get_oblique_data
 
     
