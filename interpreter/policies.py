@@ -218,9 +218,9 @@ class ObliqueDTPolicy(Policy):
 
     def __init__(self, clf, env):
         if isinstance(env.action_space, gym.spaces.Box):
-            assert isinstance(clf, DecisionTreeRegressor)
+            assert isinstance(clf, RegressorMixin)
         elif isinstance(env.action_space, gym.spaces.Discrete):
-            assert isinstance(clf, DecisionTreeClassifier)
+            assert isinstance(clf, ClassifierMixin)
         super().__init__(env.observation_space, env.action_space)
         self.clf = clf
         # Policy initialization with clipped random samples
