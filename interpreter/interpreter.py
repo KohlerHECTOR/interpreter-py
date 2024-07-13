@@ -13,6 +13,7 @@ class Interpreter:
     """
     A class to interpret a neural net policy using a decision tree policy.
     It follows algorithm 1 from https://arxiv.org/abs/2405.14956
+    By default, the trajectories will be sampled in a DAgger-like way.
 
     Parameters
     ----------
@@ -75,11 +76,13 @@ class Interpreter:
         self.tree_policies = [deepcopy(self.tree_policy)]
         self.tree_policies_rewards = [tree_reward]
 
-        for t in range(nb_iter - 1):
+        for t in range(1, nb_iter + 1):
             print("Fitting tree nb {} ...".format(t + 1))
-            S_new, A_new = self.tree_policy.generate_data(self.env, self.data_per_iter)
-            S = np.concatenate((S, S_new))
-            A = np.concatenate((A, self.oracle.predict(S_new)[0]))
+            S_tree, _ = self.tree_policy.generate_data(self.env, int((t/nb_iter) * self.data_per_iter))
+            S_oracle, A_oracle = self.oracle.generate_data(self.env, int((1 - t/nb_iter) * self.data_per_iter))
+
+            S = np.concatenate((S, S_tree, S_oracle))
+            A = np.concatenate((A, self.oracle.predict(S_tree)[0], A_oracle))
 
             self.tree_policy.fit_tree(S, A)
             tree_reward, _ = evaluate_policy(self.tree_policy, self.env)

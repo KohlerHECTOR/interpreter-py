@@ -6,7 +6,6 @@ from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.monitor import Monitor
 
 import gymnasium as gym
-from gymnasium.wrappers.time_limit import TimeLimit
 from sklearn.tree import DecisionTreeRegressor
 from huggingface_sb3 import load_from_hub
 

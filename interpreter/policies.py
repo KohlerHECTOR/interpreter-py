@@ -74,7 +74,7 @@ class Policy(ABC):
             The generated actions.
         """
         assert (
-            nb_data > 0 and env.observation_space.shape == self.observation_space.shape
+            nb_data >= 0 and env.observation_space.shape == self.observation_space.shape
         )
         if isinstance(env.action_space, gym.spaces.Discrete):
             assert env.action_space.n == self.action_space.n
