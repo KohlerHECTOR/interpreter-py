@@ -2,6 +2,7 @@ import gymnasium as gym
 from abc import ABC, abstractmethod
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.base import RegressorMixin, ClassifierMixin
 from stable_baselines3.common.utils import is_vectorized_box_observation
 from tqdm import tqdm
 
@@ -129,9 +130,9 @@ class DTPolicy(Policy):
     def __init__(self, clf, env):
         assert isinstance(env.observation_space, gym.spaces.Box)
         if isinstance(env.action_space, gym.spaces.Box):
-            assert isinstance(clf, DecisionTreeRegressor)
+            assert isinstance(clf, RegressorMixin)
         elif isinstance(env.action_space, gym.spaces.Discrete):
-            assert isinstance(clf, DecisionTreeClassifier)
+            assert isinstance(clf, ClassifierMixin)
         super().__init__(env.observation_space, env.action_space)
         self.clf = clf
         # Policy initialization with random samples
