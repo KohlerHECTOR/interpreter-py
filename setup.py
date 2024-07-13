@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 packages = find_packages(
     exclude=[
@@ -29,5 +29,6 @@ setup(
                         "gymnasium[mujoco]",
                         "huggingface-sb3",
                         "tqdm",
-                        "Shimmy==1.3.0",],
+                        "Shimmy==1.3.0",
+                        "gym"],
 )
