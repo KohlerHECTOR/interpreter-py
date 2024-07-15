@@ -19,7 +19,7 @@ setup(
     license="MIT",
     packages=packages,
     include_package_data=True,
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Hector Kohler",
