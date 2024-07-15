@@ -127,7 +127,6 @@ def test_interpreter_oblique_ctnuous_actions_high_dim():
     interpret.policy(env.reset()[0])
 
 
-
 def test_interpreter_ctnuous_actions_high_dim():
     env = gym.make("Ant-v4")
     model = PPO("MlpPolicy", env)
@@ -138,6 +137,7 @@ def test_interpreter_ctnuous_actions_high_dim():
     interpret.fit(3)
     interpret.policy(env.reset()[0])
 
+
 def test_interpreter_rlberry():
     env = gym.make("Ant-v4")
     model = PPO("MlpPolicy", env)
@@ -147,20 +147,14 @@ def test_interpreter_rlberry():
 
     exp = ExperimentManager(
         agent_class=Interpreter,
-        train_env=(gym_make, {"id":"Ant-v4"}),
+        train_env=(gym_make, {"id": "Ant-v4"}),
         fit_budget=1e4,
         init_kwargs=dict(oracle=oracle, tree_policy=tree_policy),
         n_fit=2,
-        seed=42
+        seed=42,
     )
     exp.fit()
 
-#     output = plot_writer_data(
-#         [exp],
-#         tag="reward",
-#         smooth=True,
-#         title="Episode Reward smoothed",
-# )
     _ = evaluate_agents(
-    [exp], n_simulations=50, show=False
-)  # Evaluate the trained agent on
+        [exp], n_simulations=50, show=False
+    )  # Evaluate the trained agent on

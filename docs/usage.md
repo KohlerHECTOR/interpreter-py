@@ -1,6 +1,6 @@
 ## Installation
 ```bash
-pip install git+https://github.com/KohlerHECTOR/interpreter-py.git@v0.1.5
+pip install git+https://github.com/KohlerHECTOR/interpreter-py.git@v0.2.0
 ```
 
 

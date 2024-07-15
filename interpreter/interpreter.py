@@ -6,9 +6,12 @@ from .policies import DTPolicy, SB3Policy, ObliqueDTPolicy
 from rlberry.agents import AgentWithSimplePolicy
 
 from gymnasium.spaces import Discrete, Box
+from gymnasium.wrappers.time_limit import TimeLimit
+
 import numpy as np
 from copy import deepcopy
 from tqdm import tqdm
+
 
 class Interpreter(AgentWithSimplePolicy):
     """
@@ -59,13 +62,17 @@ class Interpreter(AgentWithSimplePolicy):
         self._data_per_iter = data_per_iter
 
         check_for_correct_spaces(
-            self.env, self._tree_policy.observation_space, self._tree_policy.action_space
+            self.env,
+            self._tree_policy.observation_space,
+            self._tree_policy.action_space,
         )
         check_for_correct_spaces(
             self.env, self._oracle.observation_space, self._oracle.action_space
         )
         check_for_correct_spaces(
-            self.eval_env, self._tree_policy.observation_space, self._tree_policy.action_space
+            self.eval_env,
+            self._tree_policy.observation_space,
+            self._tree_policy.action_space,
         )
         check_for_correct_spaces(
             self.eval_env, self._oracle.observation_space, self._oracle.action_space
@@ -92,8 +99,12 @@ class Interpreter(AgentWithSimplePolicy):
 
         for t in range(1, nb_iter + 1):
             print("Fitting tree nb {} ...".format(t + 1))
-            S_tree, _ = self.generate_data(self._tree_policy, int((t/nb_iter) * self._data_per_iter))
-            S_oracle, A_oracle = self.generate_data(self._oracle, int((1 - t/nb_iter) * self._data_per_iter))
+            S_tree, _ = self.generate_data(
+                self._tree_policy, int((t / nb_iter) * self._data_per_iter)
+            )
+            S_oracle, A_oracle = self.generate_data(
+                self._oracle, int((1 - t / nb_iter) * self._data_per_iter)
+            )
 
             S = np.concatenate((S, S_tree, S_oracle))
             A = np.concatenate((A, self._oracle.predict(S_tree)[0], A_oracle))
@@ -107,12 +118,16 @@ class Interpreter(AgentWithSimplePolicy):
 
             # self.tree_policies += [deepcopy(self._tree_policy)]
             # self.tree_policies_rewards += [tree_reward]
-    
+
     def policy(self, obs):
         return self._policy.predict(obs)
 
-    def eval(self, n_simulations):
-        return evaluate_policy(self._policy, self.eval_env, n_eval_episodes=n_simulations)[0]
+    def eval(self, eval_horizon=10**5, n_simulations=10, gamma=1.0):
+        return evaluate_policy(
+            self._policy,
+            TimeLimit(self.eval_env, eval_horizon),
+            n_eval_episodes=n_simulations,
+        )[0]
 
     def generate_data(self, policy, nb_data):
         """
@@ -132,7 +147,7 @@ class Interpreter(AgentWithSimplePolicy):
         A : np.ndarray
             The generated actions.
         """
-        assert (nb_data >= 0)
+        assert nb_data >= 0
         if isinstance(self.env.action_space, Discrete):
             A = np.zeros((nb_data))
         elif isinstance(self.env.action_space, Box):
