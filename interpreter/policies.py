@@ -55,45 +55,6 @@ class Policy(ABC):
         """
         raise NotImplementedError
 
-    def generate_data(self, env, nb_data):
-        """
-        Generate data by running the policy in the environment.
-
-        Parameters
-        ----------
-        env : gym.Env
-            The environment in which to run the policy.
-        nb_data : int
-            The number of data points to generate.
-
-        Returns
-        -------
-        S : np.ndarray
-            The generated observations.
-        A : np.ndarray
-            The generated actions.
-        """
-        assert (
-            nb_data >= 0 and env.observation_space.shape == self.observation_space.shape
-        )
-        if isinstance(env.action_space, gym.spaces.Discrete):
-            assert env.action_space.n == self.action_space.n
-            A = np.zeros((nb_data))
-        elif isinstance(env.action_space, gym.spaces.Box):
-            assert env.action_space.shape == self.action_space.shape
-            A = np.zeros((nb_data, self.action_space.shape[0]))
-
-        S = np.zeros((nb_data, self.observation_space.shape[0]))
-        s, _ = env.reset()
-        for i in tqdm(range(nb_data)):
-            action, _ = self.predict(s)
-            S[i] = s
-            A[i] = action
-            s, _, term, trunc, _ = env.step(action)
-            if term or trunc:
-                s, _ = env.reset()
-        return S, A
-
 
 class SB3Policy(Policy):
     def __init__(self, base_policy):

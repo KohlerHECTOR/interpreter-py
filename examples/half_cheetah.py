@@ -33,21 +33,14 @@ tree_policy = ObliqueDTPolicy(clf, env)  #
 
 # Start the imitation learning
 interpret = Interpreter(oracle, tree_policy, env)
-interpret.train(10)
+interpret.fit(10)
 
 # Eval and save the best tree
-best_tree_policy, _ = interpret.get_best_tree_policy()
-final_tree_reward, _ = evaluate_policy(best_tree_policy, env=env, n_eval_episodes=10)
+final_tree_reward, _ = evaluate_policy(interpret._policy, env=env, n_eval_episodes=10)
 print(final_tree_reward)
 # Here you can replace pickle with joblib or cloudpickle
 with open("tree_halfcheetah.pkl", "wb") as f:
-    dump(best_tree_policy.clf, f, protocol=5)
+    dump(interpret._policy.clf, f)
 
 with open("tree_halfcheetah.pkl", "rb") as f:
     clf = load(f)
-# Render
-evaluate_policy(
-    DTPolicy(clf, env),
-    env=Monitor(gym.make("HalfCheetah-v4", render_mode="human")),
-    render=True,
-)

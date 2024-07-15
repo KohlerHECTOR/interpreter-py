@@ -26,6 +26,7 @@ setup(
     author_email="hector.kohler@inria.fr",
     install_requires=["scikit-learn>=1.3.0",
                       "stable-baselines3",
+                      "rlberry",
                         "gymnasium[mujoco]",
                         "huggingface-sb3",
                         "tqdm",
