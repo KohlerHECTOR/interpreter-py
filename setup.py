@@ -31,7 +31,6 @@ setup(
         "gymnasium[mujoco]",
         "huggingface-sb3",
         "tqdm",
-        "Shimmy==1.3.0",
         "gym",
     ],
 )
