@@ -53,7 +53,7 @@ class Interpreter(AgentWithSimplePolicy):
             isinstance(tree_policy, DTPolicy)
             or isinstance(tree_policy, ObliqueDTPolicy)
         )
-        super().__init__(env=env, **kwargs)
+        AgentWithSimplePolicy.__init__(self, env, **kwargs)
         if not isinstance(self.eval_env, Monitor):
             self.eval_env = Monitor(self.eval_env)
         self._oracle = oracle
