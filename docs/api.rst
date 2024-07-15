@@ -23,7 +23,7 @@ Main functions
   :toctree: generated/
   :template: function.rst
 
-    interpreter.Interpreter.train
+    interpreter.interpreter.Interpreter.train
     interpreter.policies.ObliqueDTPolicy.get_oblique_data
 
     
