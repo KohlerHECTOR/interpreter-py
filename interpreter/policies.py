@@ -59,18 +59,15 @@ class SymbPolicy(Policy):
         assert isinstance(model, PySRRegressor)
         assert isinstance(env.action_space, gym.spaces.Box), "Symbolic regression only works for continuous actions"
         self.model = model
+        self.model.temp_equation_file = True
 
         super().__init__(env.observation_space, env.action_space)
 
         S = [self.observation_space.sample() for _ in range(10)]
         A = [self.action_space.sample() for _ in range(10)]
-        _tmp_n_iter = self.model.niterations
-        _tmp_maxdepth = self.model.maxdepth
-        self.model.niterations = 5
-        self.model.maxdepth = 1
         self.model.fit(S, A, )
-        self.model.niterations = _tmp_n_iter
-        self.model.maxdepth = _tmp_maxdepth
+        self.model.warm_start = True
+        self.model.batching = True
 
     def predict(self, obs, state=None, deterministic=True, episode_start=0):
         """
