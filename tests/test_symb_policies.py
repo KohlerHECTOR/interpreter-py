@@ -12,14 +12,14 @@ from rlberry.envs import gym_make
 
 def test_symb_policy_ctnuous_actions():
     env = gym.make("Pendulum-v1")
-    model = PySRRegressor(binary_operators=["+", "-"], temp_equation_file=True)
+    model = PySRRegressor(binary_operators=["+", "-"])
     policy = SymbPolicy(model, env)
     s, _ = env.reset()
     policy.predict(s)
 
 def test_symb_policy_discrete_actions():
     env = gym.make("Acrobot-v1")
-    model = PySRRegressor(binary_operators=["+", "-"], temp_equation_file=True)
+    model = PySRRegressor(binary_operators=["+", "-"])
     try:
         policy = SymbPolicy(model, env)
     except AssertionError:
@@ -29,7 +29,7 @@ def test_interpreter_symb_ctnuous_actions_high_dim():
     env = gym.make("Swimmer-v4")
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
-    model = PySRRegressor(binary_operators=["+", "-"], temp_equation_file=True)
+    model = PySRRegressor(binary_operators=["+", "-"])
     learner = SymbPolicy(model, env)
     interpret = Interpreter(oracle, learner, env)
     interpret.fit(5e3)
