@@ -1,8 +1,9 @@
+from .policies import DTPolicy, SB3Policy, ObliqueDTPolicy, SymbPolicy
+
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.utils import check_for_correct_spaces
 from stable_baselines3.common.monitor import Monitor
 
-from .policies import DTPolicy, SB3Policy, ObliqueDTPolicy
 from rlberry.agents import AgentWithSimplePolicy
 
 from gymnasium.spaces import Discrete, Box
@@ -24,8 +25,8 @@ class Interpreter(AgentWithSimplePolicy):
     oracle : object
         The oracle model that generates the data for training.
         Usually a stable-baselines3 model from the hugging face hub.
-    tree_policy : object
-        The decision tree policy to be trained.
+    learner : object
+        The decision tree policy or symbolic equation to be trained.
     env : object
         The environment in which the policies are evaluated (gym.Env).
     data_per_iter : int, optional
@@ -36,7 +37,7 @@ class Interpreter(AgentWithSimplePolicy):
     ----------
     oracle : object
         The oracle model that generates the data for training.
-    tree_policy : object
+    learner : object
         The decision tree policy to be trained.
     data_per_iter : int
         The number of data points to generate per iteration.
@@ -48,31 +49,31 @@ class Interpreter(AgentWithSimplePolicy):
         A list to store the rewards of the trained tree policies over iterations.
     """
 
-    def __init__(self, oracle, tree_policy, env, data_per_iter=5000, **kwargs):
+    def __init__(self, oracle, learner, env, data_per_iter=5000, **kwargs):
         assert isinstance(oracle, SB3Policy) and (
-            isinstance(tree_policy, DTPolicy)
-            or isinstance(tree_policy, ObliqueDTPolicy)
+            isinstance(learner, DTPolicy)
+            or isinstance(learner, ObliqueDTPolicy) or isinstance(learner, SymbPolicy)
         )
         AgentWithSimplePolicy.__init__(self, env, **kwargs)
         if not isinstance(self.eval_env, Monitor):
             self.eval_env = Monitor(self.eval_env)
         self._oracle = oracle
-        self._tree_policy = tree_policy
-        self._policy = deepcopy(tree_policy)
+        self._learner = learner
+        self._policy = deepcopy(learner)
         self._data_per_iter = data_per_iter
 
         check_for_correct_spaces(
             self.env,
-            self._tree_policy.observation_space,
-            self._tree_policy.action_space,
+            self._learner.observation_space,
+            self._learner.action_space,
         )
         check_for_correct_spaces(
             self.env, self._oracle.observation_space, self._oracle.action_space
         )
         check_for_correct_spaces(
             self.eval_env,
-            self._tree_policy.observation_space,
-            self._tree_policy.action_space,
+            self._learner.observation_space,
+            self._learner.action_space,
         )
         check_for_correct_spaces(
             self.eval_env, self._oracle.observation_space, self._oracle.action_space
@@ -90,17 +91,17 @@ class Interpreter(AgentWithSimplePolicy):
         print("Fitting tree nb {} ...".format(0))
         nb_iter = int(max(1, nb_timesteps // self._data_per_iter))
         S, A = self.generate_data(self._oracle, self._data_per_iter)
-        self._tree_policy.fit_tree(S, A)
-        self._policy = deepcopy(self._tree_policy)
-        tree_reward, _ = evaluate_policy(self._tree_policy, self.eval_env)
+        self._learner.fit(S, A)
+        self._policy = deepcopy(self._learner)
+        tree_reward, _ = evaluate_policy(self._learner, self.eval_env)
         current_max_reward = tree_reward
-        # self.tree_policies = [deepcopy(self._tree_policy)]
+        # self.tree_policies = [deepcopy(self._learner)]
         # self.tree_policies_rewards = [tree_reward]
 
         for t in range(1, nb_iter + 1):
             print("Fitting tree nb {} ...".format(t + 1))
             S_tree, _ = self.generate_data(
-                self._tree_policy, int((t / nb_iter) * self._data_per_iter)
+                self._learner, int((t / nb_iter) * self._data_per_iter)
             )
             S_oracle, A_oracle = self.generate_data(
                 self._oracle, int((1 - t / nb_iter) * self._data_per_iter)
@@ -109,14 +110,14 @@ class Interpreter(AgentWithSimplePolicy):
             S = np.concatenate((S, S_tree, S_oracle))
             A = np.concatenate((A, self._oracle.predict(S_tree)[0], A_oracle))
 
-            self._tree_policy.fit_tree(S, A)
-            tree_reward, _ = evaluate_policy(self._tree_policy, self.eval_env)
+            self._learner.fit(S, A)
+            tree_reward, _ = evaluate_policy(self._learner, self.eval_env)
             if tree_reward > current_max_reward:
                 current_max_reward = tree_reward
-                self._policy = deepcopy(self._tree_policy)
+                self._policy = deepcopy(self._learner)
                 print("New best tree reward: {}".format(tree_reward))
 
-            # self.tree_policies += [deepcopy(self._tree_policy)]
+            # self.tree_policies += [deepcopy(self._learner)]
             # self.tree_policies_rewards += [tree_reward]
 
     def policy(self, obs):

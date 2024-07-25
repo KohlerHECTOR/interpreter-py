@@ -1,10 +1,9 @@
+from pysr import PySRRegressor
 import gymnasium as gym
 from abc import ABC, abstractmethod
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.base import RegressorMixin, ClassifierMixin
 from stable_baselines3.common.utils import is_vectorized_box_observation
-from tqdm import tqdm
 
 
 class Policy(ABC):
@@ -55,7 +54,67 @@ class Policy(ABC):
         """
         raise NotImplementedError
 
+class SymbPolicy(Policy):
+    def __init__(self, model, env):
+        assert isinstance(model, PySRRegressor)
+        assert isinstance(env.action_space, gym.spaces.Box), "Symbolic regression only works for continuous actions"
+        self.model = model
 
+        super().__init__(env.observation_space, env.action_space)
+
+        S = [self.observation_space.sample() for _ in range(10)]
+        A = [self.action_space.sample() for _ in range(10)]
+        _tmp_n_iter = self.model.niterations
+        _tmp_maxdepth = self.model.maxdepth
+        self.model.niterations = 5
+        self.model.maxdepth = 1
+        self.model.fit(S, A, )
+        self.model.niterations = _tmp_n_iter
+        self.model.maxdepth = _tmp_maxdepth
+
+    def predict(self, obs, state=None, deterministic=True, episode_start=0):
+        """
+        Predict the action to take given an observation.
+
+        Parameters
+        ----------
+        obs : np.ndarray
+            The observation input.
+        state : object, optional
+            The state of the policy (default is None).
+        deterministic : bool, optional
+            Whether to use a deterministic policy (default is True).
+        episode_start : int, optional
+            The episode start index (default is 0).
+
+        Returns
+        -------
+        action : np.ndarray
+            The action to take.
+        state : object
+            The updated state of the policy.
+        """
+        if not is_vectorized_box_observation(obs, self.observation_space):
+            if isinstance(self.action_space, gym.spaces.Discrete):
+                action = self.model.predict(obs.reshape(1, -1)).squeeze().astype(int)
+            else:
+                if self.action_space.shape[0] > 1:
+                    action = self.model.predict(obs.reshape(1, -1)).squeeze()
+                else:
+                    action = self.model.predict(obs.reshape(1, -1))
+            return action, state
+        else:
+            if isinstance(self.action_space, gym.spaces.Discrete):
+                return self.model.predict(obs).astype(int), None
+            else:
+                if self.action_space.shape[0] > 1:
+                    return self.model.predict(obs), None
+                else:
+                    return self.model.predict(obs)[:, np.newaxis], None
+                
+    def fit(self, X, y):
+        return self.model.fit(X, y)
+    
 class SB3Policy(Policy):
     def __init__(self, base_policy):
         self.base_policy = base_policy
@@ -142,7 +201,7 @@ class DTPolicy(Policy):
                 else:
                     return self.clf.predict(obs)[:, np.newaxis], None
 
-    def fit_tree(self, S, A):
+    def fit(self, S, A):
         """
         Fit the decision tree with the provided observations and actions.
 
@@ -269,7 +328,7 @@ class ObliqueDTPolicy(Policy):
                         None,
                     )
 
-    def fit_tree(self, S, A):
+    def fit(self, S, A):
         """
         Fit the decision tree with the provided oblique observations and actions.
 
