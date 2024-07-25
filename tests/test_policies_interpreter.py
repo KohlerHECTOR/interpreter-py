@@ -40,7 +40,6 @@ def test_dt_policy_ctnuous_actions():
     s, _ = env.reset()
     policy.predict(s)
 
-
 def test_dt_policy_wrong_clf():
     env = gym.make("Acrobot-v1")
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
@@ -48,7 +47,6 @@ def test_dt_policy_wrong_clf():
         DTPolicy(clf, env)
     except AssertionError:
         pass
-
 
 def test_dt_policy_ctnuous_actions_wrong_clf():
     env = gym.make("Pendulum-v1")
@@ -80,8 +78,8 @@ def test_interpreter():
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     clf = DecisionTreeClassifier(max_leaf_nodes=8)
-    tree_policy = DTPolicy(clf, env)
-    interpret = Interpreter(oracle, tree_policy, env)
+    learner = DTPolicy(clf, env)
+    interpret = Interpreter(oracle, learner, env)
     interpret.fit(5)
 
 
@@ -90,8 +88,8 @@ def test_interpreter_oblique():
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     clf = DecisionTreeClassifier(max_leaf_nodes=8)
-    tree_policy = ObliqueDTPolicy(clf, env)
-    interpret = Interpreter(oracle, tree_policy, env)
+    learner = ObliqueDTPolicy(clf, env)
+    interpret = Interpreter(oracle, learner, env)
     interpret.fit(5)
 
 
@@ -100,8 +98,8 @@ def test_interpreter_ctnuous_actions():
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
-    tree_policy = DTPolicy(clf, env)
-    interpret = Interpreter(oracle, tree_policy, env)
+    learner = DTPolicy(clf, env)
+    interpret = Interpreter(oracle, learner, env)
     interpret.fit(3)
 
 
@@ -110,8 +108,8 @@ def test_interpreter_oblique_ctnuous_actions():
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
-    tree_policy = ObliqueDTPolicy(clf, env)
-    interpret = Interpreter(oracle, tree_policy, env)
+    learner = ObliqueDTPolicy(clf, env)
+    interpret = Interpreter(oracle, learner, env)
     interpret.fit(3)
     interpret.policy(env.reset()[0])
 
@@ -121,10 +119,12 @@ def test_interpreter_oblique_ctnuous_actions_high_dim():
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
-    tree_policy = ObliqueDTPolicy(clf, env)
-    interpret = Interpreter(oracle, tree_policy, env)
+    learner = ObliqueDTPolicy(clf, env)
+    interpret = Interpreter(oracle, learner, env)
     interpret.fit(3)
     interpret.policy(env.reset()[0])
+
+
 
 
 def test_interpreter_ctnuous_actions_high_dim():
@@ -132,8 +132,8 @@ def test_interpreter_ctnuous_actions_high_dim():
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
-    tree_policy = DTPolicy(clf, env)
-    interpret = Interpreter(oracle, tree_policy, env)
+    learner = DTPolicy(clf, env)
+    interpret = Interpreter(oracle, learner, env)
     interpret.fit(3)
     interpret.policy(env.reset()[0])
 
@@ -143,13 +143,13 @@ def test_interpreter_rlberry():
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
-    tree_policy = DTPolicy(clf, env)
+    learner = DTPolicy(clf, env)
 
     exp = ExperimentManager(
         agent_class=Interpreter,
         train_env=(gym_make, {"id": "Ant-v4"}),
         fit_budget=1e4,
-        init_kwargs=dict(oracle=oracle, tree_policy=tree_policy),
+        init_kwargs=dict(oracle=oracle, learner=learner),
         n_fit=2,
         seed=42,
     )
