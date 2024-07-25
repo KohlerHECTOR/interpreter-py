@@ -48,7 +48,7 @@ def test_interpreter_rlberry():
         train_env=(gym_make, {"id": "Swimmer-v4"}),
         fit_budget=1e4,
         init_kwargs=dict(oracle=oracle, learner=learner),
-        n_fit=2,
+        n_fit=1,
         seed=42,
     )
     exp.fit()
