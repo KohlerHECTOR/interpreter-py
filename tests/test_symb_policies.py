@@ -26,7 +26,7 @@ def test_symb_policy_discrete_actions():
         pass
 
 def test_interpreter_symb_ctnuous_actions_high_dim():
-    env = gym.make("Swimmer-v4")
+    env = gym.make("HalfCheetah-v4")
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     model = PySRRegressor(binary_operators=["+", "-"])
@@ -37,7 +37,7 @@ def test_interpreter_symb_ctnuous_actions_high_dim():
 
 
 def test_interpreter_rlberry():
-    env = gym.make("Swimmer-v4")
+    env = gym.make("HalfCheetah-v4")
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
     model = PySRRegressor(binary_operators=["+", "-"], temp_equation_file=True)
@@ -45,7 +45,7 @@ def test_interpreter_rlberry():
 
     exp = ExperimentManager(
         agent_class=Interpreter,
-        train_env=(gym_make, {"id": "Swimmer-v4"}),
+        train_env=(gym_make, {"id": "HalfCheetah-v4"}),
         fit_budget=1e4,
         init_kwargs=dict(oracle=oracle, learner=learner),
         n_fit=1,
