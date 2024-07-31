@@ -21,7 +21,7 @@ def test_symb_policy_discrete_actions():
     env = gym.make("Acrobot-v1")
     model = PySRRegressor(binary_operators=["+", "-"])
     try:
-        policy = SymbPolicy(model, env)
+        SymbPolicy(model, env)
     except AssertionError:
         pass
 
@@ -40,7 +40,7 @@ def test_interpreter_rlberry():
     env = gym.make("HalfCheetah-v4")
     model = PPO("MlpPolicy", env)
     oracle = SB3Policy(model.policy)
-    model = PySRRegressor(binary_operators=["+", "-"], temp_equation_file=True)
+    model = PySRRegressor(binary_operators=["+", "-"])
     learner = SymbPolicy(model, env)
 
     exp = ExperimentManager(
