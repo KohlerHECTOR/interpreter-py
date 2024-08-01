@@ -33,7 +33,7 @@ learner = ObliqueDTPolicy(clf, env)  #
 
 # Start the imitation learning
 interpret = Interpreter(oracle, learner, env)
-interpret.fit(10)
+interpret.fit(5e4)
 
 # Eval and save the best tree
 final_tree_reward, _ = evaluate_policy(interpret._policy, env=env, n_eval_episodes=10)

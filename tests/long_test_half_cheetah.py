@@ -35,7 +35,7 @@ def long_test():
 
     # Start the imitation learning
     interpret = Interpreter(oracle, learner, env)
-    interpret.fit(3)
+    interpret.fit(5e3)
 
     # Eval and save the best tree
     final_tree_reward, _ = evaluate_policy(interpret._policy, env=env, n_eval_episodes=10)

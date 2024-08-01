@@ -103,12 +103,17 @@ class Interpreter(AgentWithSimplePolicy):
             S_tree, _ = self.generate_data(
                 self._learner, int((t / nb_iter) * self._data_per_iter)
             )
+            # S_tree, _ = self.generate_data(
+                # self._learner, self._data_per_iter
+            # )
             S_oracle, A_oracle = self.generate_data(
                 self._oracle, int((1 - t / nb_iter) * self._data_per_iter)
             )
+            # S = np.concatenate((S, S_tree))
 
             S = np.concatenate((S, S_tree, S_oracle))
             A = np.concatenate((A, self._oracle.predict(S_tree)[0], A_oracle))
+            # A = np.concatenate((A, self._oracle.predict(S_tree)[0]))
 
             self._learner.fit(S, A)
             tree_reward, _ = evaluate_policy(self._learner, self.eval_env)
