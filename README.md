@@ -72,7 +72,7 @@ with open("tree_halfcheetah.pkl", "rb") as f:
 
 # Cite
 ```bibtex
-@misc{kohler2024interpretableeditableprogrammatictree,
+@misc{interpretableeditableprogrammatictree,
       title={Interpretable and Editable Programmatic Tree Policies for Reinforcement Learning}, 
       author={Hector Kohler and Quentin Delfosse and Riad Akrour and Kristian Kersting and Philippe Preux},
       year={2024},
