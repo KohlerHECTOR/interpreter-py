@@ -21,7 +21,7 @@ pip install git+https://github.com/KohlerHECTOR/interpreter-py.git@v0.3.0
 ```
 
 ```python
-ffrom interpreter import Interpreter
+from interpreter import Interpreter
 from interpreter import ObliqueDTPolicy, SB3Policy, DTPolicy
 
 from stable_baselines3 import SAC
