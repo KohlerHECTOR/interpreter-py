@@ -1,0 +1,783 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>interpreter.Interpreter &#8212; interpreter 0.3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=e259d695"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/interpreter.Interpreter';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="interpreter.policies.ObliqueDTPolicy" href="interpreter.policies.ObliqueDTPolicy.html" />
+    <link rel="prev" title="API" href="../api.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Interpreter</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/KohlerHECTOR/interpreter-py" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/KohlerHECTOR/interpreter-py" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter"><code class="docutils literal notranslate"><span class="pre">Interpreter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.eval"><code class="docutils literal notranslate"><span class="pre">Interpreter.eval()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.fit"><code class="docutils literal notranslate"><span class="pre">Interpreter.fit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.generate_data"><code class="docutils literal notranslate"><span class="pre">Interpreter.generate_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.get_params"><code class="docutils literal notranslate"><span class="pre">Interpreter.get_params()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.load"><code class="docutils literal notranslate"><span class="pre">Interpreter.load()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.output_dir"><code class="docutils literal notranslate"><span class="pre">Interpreter.output_dir</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.policy"><code class="docutils literal notranslate"><span class="pre">Interpreter.policy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.reseed"><code class="docutils literal notranslate"><span class="pre">Interpreter.reseed()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.rng"><code class="docutils literal notranslate"><span class="pre">Interpreter.rng</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.sample_parameters"><code class="docutils literal notranslate"><span class="pre">Interpreter.sample_parameters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.save"><code class="docutils literal notranslate"><span class="pre">Interpreter.save()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.set_writer"><code class="docutils literal notranslate"><span class="pre">Interpreter.set_writer()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.thread_shared_data"><code class="docutils literal notranslate"><span class="pre">Interpreter.thread_shared_data</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.unique_id"><code class="docutils literal notranslate"><span class="pre">Interpreter.unique_id</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreter.Interpreter.writer"><code class="docutils literal notranslate"><span class="pre">Interpreter.writer</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><code...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="interpreter-interpreter">
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">interpreter</span></code>.Interpreter<a class="headerlink" href="#interpreter-interpreter" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="interpreter.Interpreter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interpreter.</span></span><span class="sig-name descname"><span class="pre">Interpreter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oracle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_per_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/interpreter/interpreter.html#Interpreter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interpreter.Interpreter" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AgentWithSimplePolicy</span></code></p>
+<p>A class to interpret a neural net policy using a decision tree policy.
+It follows algorithm 1 from <a class="reference external" href="https://arxiv.org/abs/2405.14956">https://arxiv.org/abs/2405.14956</a>
+By default, the trajectories will be sampled in a DAgger-like way.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>oracle</strong><span class="classifier">object</span></dt><dd><p>The oracle model that generates the data for training.
+Usually a stable-baselines3 model from the hugging face hub.</p>
+</dd>
+<dt><strong>learner</strong><span class="classifier">object</span></dt><dd><p>The decision tree policy or symbolic equation to be trained.</p>
+</dd>
+<dt><strong>env</strong><span class="classifier">object</span></dt><dd><p>The environment in which the policies are evaluated (gym.Env).</p>
+</dd>
+<dt><strong>data_per_iter</strong><span class="classifier">int, optional</span></dt><dd><p>The number of data points to generate per iteration (default is 5000).</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">optional</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>oracle</strong><span class="classifier">object</span></dt><dd><p>The oracle model that generates the data for training.</p>
+</dd>
+<dt><strong>learner</strong><span class="classifier">object</span></dt><dd><p>The decision tree policy to be trained.</p>
+</dd>
+<dt><strong>data_per_iter</strong><span class="classifier">int</span></dt><dd><p>The number of data points to generate per iteration.</p>
+</dd>
+<dt><strong>env</strong><span class="classifier">object</span></dt><dd><p>The monitored environment in which the policies are evaluated.</p>
+</dd>
+<dt><strong>tree_policies</strong><span class="classifier">list</span></dt><dd><p>A list to store the trained tree policies over iterations.</p>
+</dd>
+<dt><strong>tree_policies_rewards</strong><span class="classifier">list</span></dt><dd><p>A list to store the rewards of the trained tree policies over iterations.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#interpreter.Interpreter.eval" title="interpreter.Interpreter.eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval</span></code></a>([eval_horizon, n_simulations, gamma])</p></td>
+<td><p>Monte-Carlo policy evaluation <a class="reference internal" href="#r7c4451d921eb-1" id="id1">[1]</a> method to estimate the mean discounted reward using the current policy on the evaluation environment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#interpreter.Interpreter.fit" title="interpreter.Interpreter.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(nb_timesteps)</p></td>
+<td><p>Train the decision tree policy using data generated by the oracle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#interpreter.Interpreter.generate_data" title="interpreter.Interpreter.generate_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_data</span></code></a>(policy, nb_data)</p></td>
+<td><p>Generate data by running the policy in the environment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#interpreter.Interpreter.get_params" title="interpreter.Interpreter.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<td><p>Get parameters for this agent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#interpreter.Interpreter.load" title="interpreter.Interpreter.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename, **kwargs)</p></td>
+<td><p>Load agent object from filepath.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#interpreter.Interpreter.policy" title="interpreter.Interpreter.policy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">policy</span></code></a>(obs)</p></td>
+<td><p>Abstract method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#interpreter.Interpreter.reseed" title="interpreter.Interpreter.reseed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reseed</span></code></a>([seed_seq])</p></td>
+<td><p>Get new random number generator for the agent.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#interpreter.Interpreter.sample_parameters" title="interpreter.Interpreter.sample_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_parameters</span></code></a>(trial)</p></td>
+<td><p>Sample hyperparameters for hyperparam optimization using Optuna (<a class="reference external" href="https://optuna.org/">https://optuna.org/</a>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#interpreter.Interpreter.save" title="interpreter.Interpreter.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
+<td><p>Save agent object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#interpreter.Interpreter.set_writer" title="interpreter.Interpreter.set_writer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_writer</span></code></a>(writer)</p></td>
+<td><p>set self._writer.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_simulations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/interpreter/interpreter.html#Interpreter.eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interpreter.Interpreter.eval" title="Link to this definition">#</a></dt>
+<dd><p>Monte-Carlo policy evaluation <a class="reference internal" href="#r7c4451d921eb-1" id="id2">[1]</a> method to estimate the mean discounted reward using the current policy on the evaluation environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>eval_horizon</strong><span class="classifier">int, optional, default: 10**5</span></dt><dd><p>Maximum episode length, representing the horizon for each simulation.</p>
+</dd>
+<dt><strong>n_simulations</strong><span class="classifier">int, optional, default: 10</span></dt><dd><p>Number of Monte Carlo simulations to perform for the evaluation.</p>
+</dd>
+<dt><strong>gamma</strong><span class="classifier">float, optional, default: 1.0</span></dt><dd><p>Discount factor for future rewards.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The mean value over ‘n_simulations’ of the sum of rewards obtained in each simulation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r7c4451d921eb-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
+<p>Sutton, R. S., &amp; Barto, A. G. (2018). Reinforcement Learning: An Introduction.
+MIT Press.</p>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_timesteps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/interpreter/interpreter.html#Interpreter.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interpreter.Interpreter.fit" title="Link to this definition">#</a></dt>
+<dd><p>Train the decision tree policy using data generated by the oracle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>nb_timesteps</strong><span class="classifier">int</span></dt><dd><p>The number of environment transitions used for learning.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.generate_data">
+<span class="sig-name descname"><span class="pre">generate_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/interpreter/interpreter.html#Interpreter.generate_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interpreter.Interpreter.generate_data" title="Link to this definition">#</a></dt>
+<dd><p>Generate data by running the policy in the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>policy:</strong></dt><dd><p>The policy to generate transitions</p>
+</dd>
+<dt><strong>nb_data</strong><span class="classifier">int</span></dt><dd><p>The number of data points to generate.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>S</strong><span class="classifier">np.ndarray</span></dt><dd><p>The generated observations.</p>
+</dd>
+<dt><strong>A</strong><span class="classifier">np.ndarray</span></dt><dd><p>The generated actions.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interpreter.Interpreter.get_params" title="Link to this definition">#</a></dt>
+<dd><p>Get parameters for this agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>If True, will return the parameters for this agent and
+contained subobjects.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.load">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interpreter.Interpreter.load" title="Link to this definition">#</a></dt>
+<dd><p>Load agent object from filepath.</p>
+<p>If overridden, save() method must also be overriden.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename: str</strong></dt><dd><p>Path to the object (pickle) to load.</p>
+</dd>
+<dt><strong>**kwargs: Keyword Arguments</strong></dt><dd><p>Arguments required by the __init__ method of the Agent subclass to load.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="interpreter.Interpreter.output_dir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dir</span></span><a class="headerlink" href="#interpreter.Interpreter.output_dir" title="Link to this definition">#</a></dt>
+<dd><p>Directory that the agent can use to store data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.policy">
+<span class="sig-name descname"><span class="pre">policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/interpreter/interpreter.html#Interpreter.policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#interpreter.Interpreter.policy" title="Link to this definition">#</a></dt>
+<dd><p>Abstract method.
+The policy function takes an observation from the environment and returns an action.
+The specific implementation of the policy function depends on the agent’s learning algorithm
+or strategy, which can be deterministic or stochastic.
+Parameters
+———-
+observation (any): An observation from the environment.
+Returns
+——-
+action (any): The action to be taken based on the provided observation.
+Notes
+—–
+The data type of ‘observation’ and ‘action’ can vary depending on the specific agent
+and the environment it interacts with.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.reseed">
+<span class="sig-name descname"><span class="pre">reseed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed_seq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interpreter.Interpreter.reseed" title="Link to this definition">#</a></dt>
+<dd><p>Get new random number generator for the agent.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>seed_seq</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.random.SeedSequence</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">rlberry.seeding.seeder.Seeder</span></code> or int, default</span><span class="classifier">None</span></dt><dd><p>Seed sequence from which to spawn the random number generator.
+If None, generate random seed.
+If int, use as entropy for SeedSequence.
+If seeder, use seeder.seed_seq</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="interpreter.Interpreter.rng">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#interpreter.Interpreter.rng" title="Link to this definition">#</a></dt>
+<dd><p>Random number generator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.sample_parameters">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interpreter.Interpreter.sample_parameters" title="Link to this definition">#</a></dt>
+<dd><p>Sample hyperparameters for hyperparam optimization using
+Optuna (<a class="reference external" href="https://optuna.org/">https://optuna.org/</a>)</p>
+<p>Note: only the kwargs sent to __init__ are optimized. Make sure to
+include in the Agent constructor all “optimizable” parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>trial: optuna.trial</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interpreter.Interpreter.save" title="Link to this definition">#</a></dt>
+<dd><p>Save agent object. By default, the agent is pickled.</p>
+<p>If overridden, the load() method must also be overriden.</p>
+<p>Before saving, consider setting writer to None if it can’t be pickled (tensorboard writers
+keep references to files and cannot be pickled).</p>
+<p>Note: dill[R96e87de94430-1]_ is used when pickle fails
+(see <a class="reference external" href="https://stackoverflow.com/a/25353243">https://stackoverflow.com/a/25353243</a>, for instance).
+Pickle is tried first, since it is faster.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename: Path or str</strong></dt><dd><p>File in which to save the Agent.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>pathlib.Path</dt><dd><p>If save() is successful, a Path object corresponding to the filename is returned.
+Otherwise, None is returned.</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The returned filename might differ from the input filename: For instance,
+..</p>
+</div>
+<dl class="simple">
+<dt>the method can append the correct suffix to the name before saving.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r96e87de94430-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="github reference external" href="https://github.com/uqfoundation/dill">uqfoundation/dill</a></p>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interpreter.Interpreter.set_writer">
+<span class="sig-name descname"><span class="pre">set_writer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interpreter.Interpreter.set_writer" title="Link to this definition">#</a></dt>
+<dd><p>set self._writer. If is not None, add parameters values to writer.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="interpreter.Interpreter.thread_shared_data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thread_shared_data</span></span><a class="headerlink" href="#interpreter.Interpreter.thread_shared_data" title="Link to this definition">#</a></dt>
+<dd><p>Data shared by agent instances among different threads.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="interpreter.Interpreter.unique_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unique_id</span></span><a class="headerlink" href="#interpreter.Interpreter.unique_id" title="Link to this definition">#</a></dt>
+<dd><p>Unique identifier for the agent instance. Can be used, for example, to create files/directories for the agent to log data safely.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="interpreter.Interpreter.writer">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">writer</span></span><a class="headerlink" href="#interpreter.Interpreter.writer" title="Link to this definition">#</a></dt>
+<dd><p>Writer object to log the output (e.g. tensorboard SummaryWriter)..</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="clearer"></div></section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../api.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">API</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="interpreter.policies.ObliqueDTPolicy.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interpreter.policies</span></code>.ObliqueDTPolicy</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Hector Kohler.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
