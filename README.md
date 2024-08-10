@@ -21,7 +21,7 @@ pip install git+https://github.com/KohlerHECTOR/interpreter-py.git@v0.3.1
 ```
 
 ```python
-ffrom interpreter import Interpreter
+from interpreter import Interpreter
 from interpreter import ObliqueDTPolicy, SB3Policy, DTPolicy
 
 from stable_baselines3 import SAC
@@ -72,7 +72,7 @@ with open("tree_halfcheetah.pkl", "rb") as f:
 
 # Cite
 ```bibtex
-@misc{kohler2024interpretableeditableprogrammatictree,
+@misc{interpretableeditableprogrammatictree,
       title={Interpretable and Editable Programmatic Tree Policies for Reinforcement Learning}, 
       author={Hector Kohler and Quentin Delfosse and Riad Akrour and Kristian Kersting and Philippe Preux},
       year={2024},
