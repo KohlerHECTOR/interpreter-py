@@ -38,7 +38,9 @@ def long_test():
     interpret.fit(5e3)
 
     # Eval and save the best tree
-    final_tree_reward, _ = evaluate_policy(interpret._policy, env=env, n_eval_episodes=10)
+    final_tree_reward, _ = evaluate_policy(
+        interpret._policy, env=env, n_eval_episodes=10
+    )
     print(final_tree_reward)
     # Here you can replace pickle with joblib or cloudpickle
     with open("tree_halfcheetah.pkl", "wb") as f:

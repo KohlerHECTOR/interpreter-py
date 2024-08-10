@@ -40,6 +40,7 @@ def test_dt_policy_ctnuous_actions():
     s, _ = env.reset()
     policy.predict(s)
 
+
 def test_dt_policy_wrong_clf():
     env = gym.make("Acrobot-v1")
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
@@ -47,6 +48,7 @@ def test_dt_policy_wrong_clf():
         DTPolicy(clf, env)
     except AssertionError:
         pass
+
 
 def test_dt_policy_ctnuous_actions_wrong_clf():
     env = gym.make("Pendulum-v1")
@@ -80,7 +82,7 @@ def test_interpreter():
     clf = DecisionTreeClassifier(max_leaf_nodes=8)
     learner = DTPolicy(clf, env)
     interpret = Interpreter(oracle, learner, env)
-    interpret.fit(5)
+    interpret.fit(1e4)
 
 
 def test_interpreter_oblique():
@@ -90,7 +92,7 @@ def test_interpreter_oblique():
     clf = DecisionTreeClassifier(max_leaf_nodes=8)
     learner = ObliqueDTPolicy(clf, env)
     interpret = Interpreter(oracle, learner, env)
-    interpret.fit(5)
+    interpret.fit(1e4)
 
 
 def test_interpreter_ctnuous_actions():
@@ -100,7 +102,7 @@ def test_interpreter_ctnuous_actions():
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
     learner = DTPolicy(clf, env)
     interpret = Interpreter(oracle, learner, env)
-    interpret.fit(3)
+    interpret.fit(1e4)
 
 
 def test_interpreter_oblique_ctnuous_actions():
@@ -110,9 +112,8 @@ def test_interpreter_oblique_ctnuous_actions():
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
     learner = ObliqueDTPolicy(clf, env)
     interpret = Interpreter(oracle, learner, env)
-    interpret.fit(3)
+    interpret.fit(1e4)
     interpret.policy(env.reset()[0])
-
 
 def test_interpreter_oblique_ctnuous_actions_high_dim():
     env = gym.make("Ant-v4")
@@ -121,10 +122,8 @@ def test_interpreter_oblique_ctnuous_actions_high_dim():
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
     learner = ObliqueDTPolicy(clf, env)
     interpret = Interpreter(oracle, learner, env)
-    interpret.fit(3)
+    interpret.fit(1e4)
     interpret.policy(env.reset()[0])
-
-
 
 
 def test_interpreter_ctnuous_actions_high_dim():
@@ -134,7 +133,7 @@ def test_interpreter_ctnuous_actions_high_dim():
     clf = DecisionTreeRegressor(max_leaf_nodes=8)
     learner = DTPolicy(clf, env)
     interpret = Interpreter(oracle, learner, env)
-    interpret.fit(3)
+    interpret.fit(1e4)
     interpret.policy(env.reset()[0])
 
 

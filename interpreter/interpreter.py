@@ -1,4 +1,4 @@
-from .policies import DTPolicy, SB3Policy, ObliqueDTPolicy, SymbPolicy
+from .policies import DTPolicy, SB3Policy, ObliqueDTPolicy
 
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.utils import check_for_correct_spaces
@@ -26,7 +26,7 @@ class Interpreter(AgentWithSimplePolicy):
         The oracle model that generates the data for training.
         Usually a stable-baselines3 model from the hugging face hub.
     learner : object
-        The decision tree policy or symbolic equation to be trained.
+        The decision tree policy.
     env : object
         The environment in which the policies are evaluated (gym.Env).
     data_per_iter : int, optional
@@ -51,8 +51,7 @@ class Interpreter(AgentWithSimplePolicy):
 
     def __init__(self, oracle, learner, env, data_per_iter=5000, **kwargs):
         assert isinstance(oracle, SB3Policy) and (
-            isinstance(learner, DTPolicy)
-            or isinstance(learner, ObliqueDTPolicy) or isinstance(learner, SymbPolicy)
+            isinstance(learner, DTPolicy) or isinstance(learner, ObliqueDTPolicy)
         )
         AgentWithSimplePolicy.__init__(self, env, **kwargs)
         if not isinstance(self.eval_env, Monitor):
@@ -104,7 +103,7 @@ class Interpreter(AgentWithSimplePolicy):
                 self._learner, int((t / nb_iter) * self._data_per_iter)
             )
             # S_tree, _ = self.generate_data(
-                # self._learner, self._data_per_iter
+            # self._learner, self._data_per_iter
             # )
             S_oracle, A_oracle = self.generate_data(
                 self._oracle, int((1 - t / nb_iter) * self._data_per_iter)

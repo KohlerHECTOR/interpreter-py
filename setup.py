@@ -32,6 +32,5 @@ setup(
         "huggingface-sb3",
         "tqdm",
         "gym",
-        "pysr"
     ],
 )
