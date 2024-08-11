@@ -279,3 +279,28 @@ class ObliqueDTPolicy(Policy):
             The actions.
         """
         self.clf.fit(self.get_oblique_data(S), A)
+
+
+# class PROPELPolicy(Policy):
+#     def __init__(self, sb3_policy, program_policy, lambda_ = 0.5):
+#         assert 0 < lambda_ < 1
+#         assert isinstance(sb3_policy, SB3Policy) and (isinstance(program_policy, DTPolicy) or isinstance(program_policy, ObliqueDTPolicy))
+#         super().__init__(program_policy.observation_space, program_policy.action_space)
+#         self.f = sb3_policy
+#         self.pi = program_policy
+#         self.lambda_
+
+#     def predict_discrete_a(self, obs, state, deterministic, episode_start):
+#         if np.random.random() < self.lambda_:
+#             return self.f.predict(obs, state, deterministic, episode_start)
+#         else:
+#             return self.pi.predict(obs, state, deterministic, episode_start)
+
+#     def predict_contn_a(self, obs, state, deterministic, episode_start):
+#         return self.lambda_ * self.f.predict(obs, state, deterministic, episode_start) + self.pi.predict(obs, state, deterministic, episode_start)
+
+#     def predict(self, obs, state=None, deterministic=True, episode_start=0):
+#         if isinstance(self.action_space, gym.spaces.Discrete):
+#             return self.predict_discrete_a(obs, state, deterministic, episode_start)
+#         else:
+#             return self.predict_contn_a(obs, state, deterministic, episode_start)
