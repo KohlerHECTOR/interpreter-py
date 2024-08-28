@@ -99,7 +99,7 @@ class Interpreter(AgentWithSimplePolicy):
 
         for t in range(1, nb_iter + 1):
             print("Fitting tree nb {} ...".format(t + 1))
-            S_tree, _ = self.generate_data(self._data_per_iter)
+            S_tree, _ = self.generate_data(self._learner, self._data_per_iter)
             # S_tree, _ = self.generate_data(
             # self._learner, self._data_per_iter
             # )
