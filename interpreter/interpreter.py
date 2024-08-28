@@ -99,19 +99,14 @@ class Interpreter(AgentWithSimplePolicy):
 
         for t in range(1, nb_iter + 1):
             print("Fitting tree nb {} ...".format(t + 1))
-            S_tree, _ = self.generate_data(
-                self._learner, int((t / nb_iter) * self._data_per_iter)
-            )
+            S_tree, _ = self.generate_data(self._data_per_iter)
             # S_tree, _ = self.generate_data(
             # self._learner, self._data_per_iter
             # )
-            S_oracle, A_oracle = self.generate_data(
-                self._oracle, int((1 - t / nb_iter) * self._data_per_iter)
-            )
             # S = np.concatenate((S, S_tree))
 
-            S = np.concatenate((S, S_tree, S_oracle))
-            A = np.concatenate((A, self._oracle.predict(S_tree)[0], A_oracle))
+            S = np.concatenate((S, S_tree))
+            A = np.concatenate((A, self._oracle.predict(S_tree)[0]))
             # A = np.concatenate((A, self._oracle.predict(S_tree)[0]))
 
             self._learner.fit(S, A)
