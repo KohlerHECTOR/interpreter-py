@@ -1,0 +1,12 @@
+﻿:mod:`interpreter`.Interpreter
+=====================================
+
+.. currentmodule:: interpreter
+
+.. autoclass:: Interpreter
+
+.. include:: interpreter.Interpreter.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

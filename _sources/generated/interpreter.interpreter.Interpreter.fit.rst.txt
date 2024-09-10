@@ -1,0 +1,12 @@
+﻿:mod:`interpreter.interpreter`.Interpreter.fit
+===========================================================
+
+.. currentmodule:: interpreter.interpreter
+
+.. autofunction:: Interpreter.fit
+
+.. include:: interpreter.interpreter.Interpreter.fit.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

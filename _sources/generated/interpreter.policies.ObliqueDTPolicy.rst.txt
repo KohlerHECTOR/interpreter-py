@@ -1,0 +1,12 @@
+﻿:mod:`interpreter.policies`.ObliqueDTPolicy
+==================================================
+
+.. currentmodule:: interpreter.policies
+
+.. autoclass:: ObliqueDTPolicy
+
+.. include:: interpreter.policies.ObliqueDTPolicy.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>
